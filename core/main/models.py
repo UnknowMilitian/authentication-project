@@ -43,3 +43,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Item(models.Model):
+    title = models.CharField(_("Title"), max_length=250)
+    description = models.TextField(_("Description"), blank=True, null=True)
+
+    def __str__(self):
+        return self.title
