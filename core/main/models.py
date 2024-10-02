@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
@@ -37,12 +38,12 @@ class UserProfile(models.Model):
         related_name="user_profile",
     )
     location = models.CharField(_("Location"), max_length=300, null=True, blank=True)
-    profile_picture = models.ImageField(
+    avatar = models.ImageField(
         _("Profile Picture"), upload_to="profile-picture", null=True, blank=True
     )
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}'s Profile"
 
 
 class Action(models.Model):
@@ -53,28 +54,12 @@ class Action(models.Model):
 
 
 class ActionLog(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=_("ActionLog User"),
-        related_name="action_log_user",
-    )
-    user_profile = models.ForeignKey(
-        UserProfile,
-        on_delete=models.CASCADE,
-        verbose_name=_("ActionLog User-Profile"),
-        related_name="action_log_userprofile",
-    )
-
-    action = models.ForeignKey(
-        Action,
-        on_delete=models.CASCADE,
-        verbose_name=_("ActionLog Action"),
-        related_name="action_log_action",
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    action = models.ForeignKey(Action, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"User - {self.user.username}, Action: {self.action.title}"
+        return f"Action Log for {self.user.username} - {self.action.title} at {self.created_at}"
 
 
 class Item(models.Model):
