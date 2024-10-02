@@ -54,24 +54,27 @@ class Action(models.Model):
 
 class ActionLog(models.Model):
     user = models.ForeignKey(
-        to=_("User"),
+        User,
         on_delete=models.CASCADE,
-        related_name="action-log-user",
-        blank=True,
+        verbose_name=_("ActionLog User"),
+        related_name="action_log_user",
     )
     user_profile = models.ForeignKey(
-        to=_("User Profile"),
+        UserProfile,
         on_delete=models.CASCADE,
-        related_name="action-log-userprofile",
-        blank=True,
+        verbose_name=_("ActionLog User-Profile"),
+        related_name="action_log_userprofile",
     )
 
     action = models.ForeignKey(
-        to=_(Action),
-        verbose_name=_("Action"),
-        related_name="action-log-action",
-        blank=True,
+        Action,
+        on_delete=models.CASCADE,
+        verbose_name=_("ActionLog Action"),
+        related_name="action_log_action",
     )
+
+    def __str__(self):
+        return f"User - {self.user.username}, Action: {self.action.title}"
 
 
 class Item(models.Model):
